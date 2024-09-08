@@ -9,3 +9,5 @@ import os
 STANDARD_SCOPE = "user.info,user.metrics,user.activity"
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+
+TIMEOUT = 10

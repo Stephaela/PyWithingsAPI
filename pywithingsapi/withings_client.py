@@ -10,7 +10,10 @@ import json
 import os
 import urllib.parse as urlparse
 
+import requests
+
 from pywithingsapi import CONSTANTS as CONST
+from pywithingsapi import post_request
 
 
 class WithingsClient:
@@ -125,3 +128,29 @@ class WithingsClient:
         if self.demo:
             auth_params["mode"] = "demo"
         return CONST.URL_AUTH + "?" + urlparse.urlencode(auth_params)
+
+    def post_request_access(self, code: str) -> requests.Response:
+        """
+        Sends a POST request to obtain an access token using an authorization code.
+
+        This function sends a POST request to the OAuth2 endpoint to exchange the authorization
+        code for an access token. The necessary client credentials and redirect URI are included
+        in the request body.
+
+        Args:
+            code (str): The authorization code obtained after the user authorizes the application.
+
+        Returns:
+            requests.Response: The response object from the POST request, which contains the access token
+            if the request is successful.
+        """
+        url = CONST.URL_OAUTH2_V2
+        data = {
+            "action": "requesttoken",
+            "grant_type": "authorization_code",
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+            "code": code,
+            "redirect_uri": self.redirect_uri
+        }
+        return post_request.post_request(url, data)

@@ -11,3 +11,5 @@ STANDARD_SCOPE = "user.info,user.metrics,user.activity"
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 
 TIMEOUT = 10
+
+URL_AUTH = "https://account.withings.com/oauth2_user/authorize2"

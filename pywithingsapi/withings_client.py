@@ -8,6 +8,7 @@ and store them in a JSON file.
 
 import json
 import os
+import urllib.parse as urlparse
 
 from pywithingsapi import CONSTANTS as CONST
 
@@ -101,3 +102,26 @@ class WithingsClient:
 
         except OSError as e:
             print(f"An error occurred while accessing or creating the directory ({e}, {type(e).__name__}).")
+
+    def create_auth_url(self) -> str:
+        """
+        Generates the authentication URL for user authorization in the Withings API.
+
+        This method constructs a URL for initiating an OAuth authorization request
+        and returns it as a string. It includes the required parameters such as
+        `response_type`, `client_id`, `scope`, `redirect_uri`, and `state`. If the
+        `demo` flag is enabled, a `mode=demo` parameter is appended to the URL.
+
+        Returns:
+            str: The full authentication URL with encoded parameters for user authorization.
+        """
+        auth_params = {
+            "response_type": "code",
+            "client_id": self.client_id,
+            "scope": self.scope,
+            "redirect_uri": self.redirect_uri,
+            "state": self.state
+        }
+        if self.demo:
+            auth_params["mode"] = "demo"
+        return CONST.URL_AUTH + "?" + urlparse.urlencode(auth_params)

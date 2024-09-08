@@ -154,3 +154,25 @@ class WithingsClient:
             "redirect_uri": self.redirect_uri
         }
         return post_request.post_request(url, data)
+
+    def access_new_token(self):
+        """
+        This method guides the user through the OAuth2 flow to retrieve a new access token.
+
+        It generates an authorization URL, asks the user to open it in a browser,
+        and prompts them to input the URL they were redirected to after logging in. It extracts
+        the authorization code from the redirected URL and sends a request to obtain a new access token.
+
+        Returns:
+            dict: The response content parsed as a JSON object, containing the access token
+            and additional information.
+        """
+        print("Please open the following link in your browser and confirm: ")
+        auth_url = self.create_auth_url()
+        print(auth_url)
+        print("Be aware that the code in the URL is only valid for 30 seconds.")
+        url = input("Please enter the URL you were redirected to after logging in: ")
+
+        my_code = urlparse.parse_qs(urlparse.urlparse(url).query).get("code")[0]
+
+        return json.loads(self.post_request_access(my_code).content)

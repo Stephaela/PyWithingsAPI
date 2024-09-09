@@ -26,7 +26,6 @@ def post_request(url: str, data: dict, headers: dict = None) -> requests.Respons
     """
     try:
         res = requests.post(url=url, headers=headers, data=data, timeout=CONST.TIMEOUT)
-        print(res)
         res.raise_for_status()
         return res
 

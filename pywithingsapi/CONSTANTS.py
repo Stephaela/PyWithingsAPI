@@ -14,3 +14,7 @@ TIMEOUT = 10
 
 URL_AUTH = "https://account.withings.com/oauth2_user/authorize2"
 URL_OAUTH2_V2 = "https://wbsapi.withings.net/v2/oauth2"
+URL_MEASURE = "https://wbsapi.withings.net/measure"
+URL_MEASURE_V2 = "https://wbsapi.withings.net/v2/measure"
+URL_HEART_V2 = "https://wbsapi.withings.net/v2/heart"
+URL_SLEEP_V2 = "https://wbsapi.withings.net/v2/sleep"

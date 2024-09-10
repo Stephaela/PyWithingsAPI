@@ -2,20 +2,24 @@
 withings_user.py module
 
 This module defines the `WithingsUser` class, which handles user-related operations
-such as token storage, user folder creation, and API request authorization.
+such as token storage, user folder creation, API request authorization and refreshing
+an existing access token.
 """
 
 import json
 import os
 
+import requests
+
 from pywithingsapi import CONSTANTS as CONST
+from pywithingsapi import post_request
 from pywithingsapi import withings_client
 
 
 class WithingsUser:
     """
     Represents a Withings user and manages user-specific data such as access tokens,
-    folder storage, and headers for API requests.
+    refresh_token, folder storage, and headers for API requests.
 
     This class interacts with an API client to manage authentication tokens and stores
     user-related data locally in a directory structure.
@@ -146,3 +150,38 @@ class WithingsUser:
             "Authorization": auth,
             "Content-Type": "application/x-www-form-urlencoded",
         }
+
+    def post_request_refresh(self) -> requests.Response:
+        """
+        Sends a POST request to obtain an new access token by using the refresh token.
+
+        This function sends a POST request to the OAuth2 endpoint to exchange the refresh
+        token for a fresh access token. The necessary client credentials and refresh token are included
+        in the request body.
+
+        Returns:
+            requests.Response: The response object from the POST request, which contains the fresh access
+             and refresh tokens if the request is successful.
+        """
+        url = CONST.URL_OAUTH2_V2
+        data = {
+            "action": "requesttoken",
+            "grant_type": "refresh_token",
+            "client_id": self.api_client.client_id,
+            "client_secret": self.api_client.client_secret,
+            "refresh_token": self.refresh_token,
+        }
+        return post_request.post_request(url, data)
+
+    def refresh_existing_token(self):
+        """
+        This method guides the user through refreshing the access token.
+
+        It retrieves the updated tokens and stores them in a JSON file.
+        """
+        res = json.loads(self.post_request_refresh().content)["body"]
+
+        self.access_token = res["access_token"]
+        self.refresh_token = res["refresh_token"]
+
+        self.store_user_params()

@@ -42,7 +42,7 @@ class WithingsClient:
             client_id (str): The client ID for the Withings API.
             client_secret (str): The client secret for the Withings API.
             redirect_uri (str): The redirect URI for OAuth2 authentication.
-            state (str): A string to maintain state between the request and callback.
+            state (str): A string to maintain state between the request and callback. Defaults to str(uuid.uuid4()).
             scope (str, optional): The scope of the API access. Defaults to CONST.STANDARD_SCOPE.
             demo (bool, optional): A flag indicating whether the client is in demo mode. Defaults to False.
         """
@@ -167,6 +167,9 @@ class WithingsClient:
         Returns:
             dict: The response content parsed as a JSON object, containing the access token
             and additional information.
+
+        Raises:
+            ValueError: If returned state is not equal to original state.
         """
         print("Please open the following link in your browser and confirm: ")
         auth_url = self.create_auth_url()

@@ -9,6 +9,7 @@ and store them in a JSON file.
 import json
 import os
 import urllib.parse as urlparse
+import uuid
 
 import requests
 
@@ -32,7 +33,7 @@ class WithingsClient:
         demo (bool): A flag indicating whether the client is in demo mode.
     """
 
-    def __init__(self, client_id: str, client_secret: str, redirect_uri: str, state: str,
+    def __init__(self, client_id: str, client_secret: str, redirect_uri: str, state: str = str(uuid.uuid4()),
                  scope: str = CONST.STANDARD_SCOPE, demo: bool = False):
         """
         Initializes a WithingsClient instance and stores the parameters in a JSON file.
@@ -172,6 +173,11 @@ class WithingsClient:
         print(auth_url)
         print("Be aware that the code in the URL is only valid for 30 seconds.")
         url = input("Please enter the URL you were redirected to after logging in: ")
+
+        returned_state = urlparse.parse_qs(urlparse.urlparse(url).query).get("state")[0]
+
+        if returned_state != self.state:
+            raise ValueError("Invalid state parameter.")
 
         my_code = urlparse.parse_qs(urlparse.urlparse(url).query).get("code")[0]
 

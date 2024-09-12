@@ -59,6 +59,11 @@ class WithingsUser:
                     setattr(self, key, data[key])
                 except KeyError:
                     raise KeyError(f"Key '{key}' is missing from the provided data.")
+
+            if self.expiration_time < int(time.time()):
+                self.user_folder = self.create_user_folder()
+                self.refresh_existing_token()
+
         else:
             token_data = self.api_client.access_new_token()["body"]
             print(token_data)
@@ -159,7 +164,7 @@ class WithingsUser:
 
     def post_request_refresh(self) -> requests.Response:
         """
-        Sends a POST request to obtain an new access token by using the refresh token.
+        Sends a POST request to obtain a new access token by using the refresh token.
 
         This function sends a POST request to the OAuth2 endpoint to exchange the refresh
         token for a fresh access token. The necessary client credentials and refresh token are included

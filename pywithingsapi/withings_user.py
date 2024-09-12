@@ -8,6 +8,7 @@ an existing access token.
 
 import json
 import os
+import time
 
 import requests
 
@@ -31,6 +32,7 @@ class WithingsUser:
         refresh_token (str): The refresh token for this user
         scope (str): The scope of the API access.
         token_type (str): The type of the access and refresh token
+        expiration_time (int): The time the access token expires
         user_folder (str): The name of the folder where the token and user data are saved
 
     """
@@ -49,7 +51,7 @@ class WithingsUser:
         """
         self.api_client = api_client
 
-        keys = ["userid", "access_token", "refresh_token", "scope", "token_type"]
+        keys = ["userid", "access_token", "refresh_token", "scope", "token_type", "expiration_time"]
 
         if data is not None:
             for key in keys:
@@ -59,12 +61,15 @@ class WithingsUser:
                     raise KeyError(f"Key '{key}' is missing from the provided data.")
         else:
             token_data = self.api_client.access_new_token()["body"]
+            print(token_data)
 
             for key in keys:
                 try:
                     setattr(self, key, token_data[key])
                 except KeyError:
                     raise KeyError(f"Key '{key}' is missing from the token data.")
+
+            self.expiration_time = int(time.time()) + token_data["expires_in"]
 
         self.user_folder = self.create_user_folder()
         self.store_user_params()
@@ -87,7 +92,8 @@ class WithingsUser:
         """
         if not isinstance(data, dict):
             raise TypeError("Input must be a dictionary.")
-        if not all(key in data for key in ["userid", "access_token", "refresh_token", "scope", "token_type"]):
+        if not all(key in data for key in ["userid", "access_token", "refresh_token", "scope", "token_type",
+                                           "expiration_time"]):
             raise KeyError("At least one key is missing in the dictionary.")
         return cls(api, data)
 
@@ -125,7 +131,7 @@ class WithingsUser:
 
         user_data = {
             key: getattr(self, key)
-            for key in ["userid", "access_token", "refresh_token", "scope", "token_type"]
+            for key in ["userid", "access_token", "refresh_token", "scope", "token_type", "expiration_time"]
         }
 
         user_data["demo"] = self.api_client.demo
@@ -183,5 +189,6 @@ class WithingsUser:
 
         self.access_token = res["access_token"]
         self.refresh_token = res["refresh_token"]
+        self.expiration_time = int(time.time()) + res["expires_in"]
 
         self.store_user_params()

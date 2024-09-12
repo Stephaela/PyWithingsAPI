@@ -7,6 +7,7 @@ This module provides functions for making POST requests to the Withings API.
 import json
 import requests
 import os
+import time
 
 from pywithingsapi import CONSTANTS as CONST
 from pywithingsapi.withings_user import WithingsUser
@@ -59,6 +60,9 @@ def get_data_dict(data: dict, url: str, user: WithingsUser, to_json: bool = Fals
     Raises:
         OSError: If an error occurs while accessing the directory or writing the file.
     """
+    if user.expiration_time < int(time.time()):
+        user.refresh_existing_token()
+
     headers = user.create_headers()
     response = post_request(url, data, headers)
     dct = json.loads(response.content)

@@ -74,4 +74,8 @@ def get_data_dict(data: dict, url: str, user: WithingsUser, to_json: bool = Fals
         except OSError as e:
             print(f"An error occurred while accessing the directory or writing the file ({e}, {type(e).__name__}).")
 
-    return dct
+    if dct["status"] != 0:
+        print("The POST request was successful, but another error occurred. Withings status code:", dct["status"],
+              "with error message:", dct["error"])
+
+    return dct["body"]

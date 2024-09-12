@@ -18,3 +18,10 @@ URL_MEASURE = "https://wbsapi.withings.net/measure"
 URL_MEASURE_V2 = "https://wbsapi.withings.net/v2/measure"
 URL_HEART_V2 = "https://wbsapi.withings.net/v2/heart"
 URL_SLEEP_V2 = "https://wbsapi.withings.net/v2/sleep"
+
+START_EQUALS_END_WARNING_STR = (
+        "Start and end are equal. No data will be returned."
+)
+DATE_ORDER_WARNING_STR = (
+    "Start and end are in the wrong order. No data will be returned."
+)

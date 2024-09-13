@@ -10,6 +10,27 @@ import warnings
 from pywithingsapi import CONSTANTS as CONST
 
 
+def ensure_non_negative_int_or_none(*parameters: int | None):
+    """
+    Ensures that all provided parameters are either non-negative integers or None.
+
+    This function accepts a variable number of parameters and checks if each one is
+    either a non-negative integer or None. If any parameter fails this validation,
+    a ValueError is raised.
+
+    Args:
+        *parameters (int | None): A variable number of arguments where each argument must
+            be either a non-negative integer or None.
+
+    Raises:
+        ValueError: If any parameter is not a non-negative integer or None, the function
+            raises an exception with a message identifying the invalid parameter.
+    """
+    for param in list(parameters):
+        if not (isinstance(param, int) and param >= 0 or param is None):
+            raise ValueError(f"Invalid parameter: {param}. Must be a non-negative integer or None.")
+
+
 def handle_start_end_update_ymd(startdate: int = None,
                                 enddate: int = None,
                                 lastupdate: int = None) -> (dt.date, dt.date, int):
@@ -51,8 +72,7 @@ def handle_start_end_update_ymd(startdate: int = None,
 
     if startdate is not None and enddate is not None:
         # Both startdate and enddate were provided, but not lastupdate
-        if enddate < startdate:
-            warnings.warn(CONST.DATE_ORDER_WARNING_STR, Warning)
+        warn_if_end_before_start(startdate, enddate)
         startdateymd = dt.date.fromtimestamp(startdate)
         enddateymd = dt.date.fromtimestamp(enddate)
     else:
@@ -61,3 +81,39 @@ def handle_start_end_update_ymd(startdate: int = None,
         enddateymd = None
 
     return startdateymd, enddateymd, lastupdate
+
+
+def warn_if_end_before_start(start: int, end: int):
+    """
+    Raises a warning if the end time is before the start time.
+
+    Args:
+        start (int): The start time in unix format.
+        end (int): The end time in unix format.
+    """
+    if start is not None and end is not None and end < start:
+        warnings.warn(CONST.DATE_ORDER_WARNING_STR, Warning)
+
+
+def warn_if_start_equals_end(start: int, end: int):
+    """
+    Raises a warning if the start time is equal to the end time.
+
+    Args:
+        start (int): The start time in unix format.
+        end (int): The end time in unix format.
+    """
+    if start is not None and end is not None and start == end:
+        warnings.warn(CONST.START_EQUALS_END_WARNING_STR, Warning)
+
+
+def warn_if_time_diff_greater_24h(start: int, end: int):
+    """
+    Raises a warning if the time difference between `start` and `end` exceeds 24 hours.
+
+    Args:
+        start (int): The start time in unix format.
+        end (int): The end time in unix format.
+    """
+    if (end - start) / 3600 > 24:
+        warnings.warn(CONST.TIME_DIFF_GREATER_24H_WARNING_STR, Warning)

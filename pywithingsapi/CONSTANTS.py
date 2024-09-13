@@ -25,3 +25,50 @@ START_EQUALS_END_WARNING_STR = (
 DATE_ORDER_WARNING_STR = (
     "Start and end are in the wrong order. No data will be returned."
 )
+TIME_DIFF_GREATER_24H_WARNING_STR = (
+        "Time difference between start and end greater than 24h. "
+        + "Only data for first 24h after startdate will be returned."
+)
+
+SLEEP_GET_DATA_FIELDS = [
+    "hr",
+    "rr",
+    "snoring",
+    "sdnn_1",
+    "rmssd",
+    "mvt_score"
+]
+
+SLEEP_SUMMARY_DATA_FIELDS = [
+    "nb_rem_episodes",
+    "sleep_efficiency",
+    "sleep_latency",
+    "total_sleep_time",
+    "total_timeinbed",
+    "wakeup_latency",
+    "waso",
+    "apnea_hypopnea_index",
+    "breathing_disturbances_intensity",
+    "asleepduration",
+    "deepsleepduration",
+    "durationtosleep",
+    "durationtowakeup",
+    "hr_average",
+    "hr_max",
+    "hr_min",
+    "lightsleepduration",
+    "mvt_active_duration",
+    "mvt_score_avg",
+    "night_events",
+    "out_of_bed_count",
+    "remsleepduration",
+    "rr_average",
+    "rr_max",
+    "rr_min",
+    "sleep_score",
+    "snoring",
+    "snoringepisodecount",
+    "wakeupcount",
+    "wakeupduration",
+    "withings_index"
+]

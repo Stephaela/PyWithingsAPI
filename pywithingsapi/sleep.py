@@ -42,14 +42,9 @@ def data_sleep_get(
     Raises:
         ValueError: If required parameters are missing or invalid data fields are provided.
     """
-    if startdate is None or enddate is None:
-        raise ValueError("At least one parameter is missing.")
-    elif enddate < startdate:
-        warnings.warn(CONST.DATE_ORDER_WARNING_STR, Warning)
-    elif startdate == enddate:
-        warnings.warn(CONST.START_EQUALS_END_WARNING_STR, Warning)
-    elif (enddate - startdate) / 3600 > 24:
-        warnings.warn(CONST.TIME_DIFF_GREATER_24H_WARNING_STR, Warning)
+    utils.warn_if_end_before_start(startdate, enddate)
+    utils.warn_if_start_equals_end(startdate, enddate)
+    utils.warn_if_time_diff_greater_24h(startdate, enddate)
     if not all(x in CONST.SLEEP_GET_DATA_FIELDS for x in data_fields):
         raise ValueError("At least one data field in the request does not exist.")
     return {'action': "get", 'startdate': startdate,
@@ -92,8 +87,7 @@ def data_sleep_summary(
     """
     startdateymd, enddateymd, lastupdate = \
         utils.handle_start_end_update_ymd(startdate, enddate, lastupdate)
-    if not (isinstance(offset, int) and offset >= 0):
-        raise ValueError("The parameter offset must be a non-negative integer.")
+    utils.ensure_non_negative_int_or_none(offset)
     if not all(x in CONST.SLEEP_SUMMARY_DATA_FIELDS for x in data_fields):
         raise ValueError("At least one data field in the request does not exist.")
     return {'action': "getsummary", 'startdateymd': startdateymd,

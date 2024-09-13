@@ -6,10 +6,10 @@ This module provides functions to interact with the Withings API for heart data.
 It includes functions to retrieve a heart signal (`data_heart_get`), list heart signals
 within a date range (`data_heart_list`), and make POST requests to fetch heart data (`post_request_heart`).
 """
-import warnings
 
 from pywithingsapi import CONSTANTS as CONST
 from pywithingsapi import post_request
+from pywithingsapi import utils
 from pywithingsapi.withings_user import WithingsUser
 
 
@@ -50,13 +50,9 @@ def data_heart_list(startdate: int = None, enddate: int = None, offset: int = 0)
     Raises:
         ValueError: If there is at least one parameter which is not either None or a non-negative integer.
     """
-    if not all(((isinstance(param, int) and param >= 0) or param is None for param in list(locals().values()))):
-        raise ValueError("All parameters must be either None or non-negative integers.")
-    if startdate is not None and enddate is not None:
-        if enddate < startdate:
-            warnings.warn(CONST.DATE_ORDER_WARNING_STR, Warning)
-        elif startdate == enddate:
-            warnings.warn(CONST.START_EQUALS_END_WARNING_STR, Warning)
+    utils.ensure_non_negative_int_or_none(startdate, enddate, offset)
+    utils.warn_if_end_before_start(startdate, enddate)
+    utils.warn_if_start_equals_end(startdate, enddate)
     return {"action": "list", "startdate": startdate, "enddate": enddate, "offset": offset}
 
 

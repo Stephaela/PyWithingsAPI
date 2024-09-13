@@ -10,6 +10,7 @@ import os
 import time
 
 from pywithingsapi import CONSTANTS as CONST
+from pywithingsapi import exceptions
 from pywithingsapi.withings_user import WithingsUser
 
 
@@ -79,7 +80,6 @@ def get_data_dict(data: dict, url: str, user: WithingsUser, to_json: bool = Fals
             print(f"An error occurred while accessing the directory or writing the file ({e}, {type(e).__name__}).")
 
     if dct["status"] != 0:
-        print("The POST request was successful, but another error occurred. Withings status code:", dct["status"],
-              "with error message:", dct["error"])
+        raise exceptions.WithingsStatusNotZeroError(data, url, dct)
 
     return dct["body"]

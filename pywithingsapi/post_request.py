@@ -68,6 +68,9 @@ def get_data_dict(data: dict, url: str, user: WithingsUser, to_json: bool = Fals
     response = post_request(url, data, headers)
     dct = json.loads(response.content)
 
+    if dct["status"] != 0:
+        raise exceptions.WithingsStatusNotZeroError(data, url, dct)
+
     if to_json:
         user_folder = f"user_{user.userid}"
         filename = url.split('/')[-1] + "_" + data["action"] + ".json"
@@ -75,11 +78,8 @@ def get_data_dict(data: dict, url: str, user: WithingsUser, to_json: bool = Fals
         try:
             with open(os.path.join(CONST.DATA_DIR, user_folder, filename), "w",
                       encoding="utf-8") as f:
-                json.dump(dct, f, indent=4)
+                json.dump(dct["body"], f, indent=4)
         except OSError as e:
             print(f"An error occurred while accessing the directory or writing the file ({e}, {type(e).__name__}).")
-
-    if dct["status"] != 0:
-        raise exceptions.WithingsStatusNotZeroError(data, url, dct)
 
     return dct["body"]

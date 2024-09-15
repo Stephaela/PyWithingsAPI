@@ -8,7 +8,6 @@ POST requests to the Withings API.
 """
 
 from typing import List
-import warnings
 
 from pywithingsapi import CONSTANTS as CONST
 from pywithingsapi import post_request

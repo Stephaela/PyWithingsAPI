@@ -67,7 +67,9 @@ def data_measure_getmeas(
         else:
             warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
 
-    if len(meastypes_list) == 1:
+    if len(meastypes_list) == 0:
+        meastypes = ",".join(map(str, CONST.MEASURE_GETMEAS_DATA_FIELDS_INT))
+    elif len(meastypes_list) == 1:
         meastype = meastypes_list[0]
         meastypes = None
     else:

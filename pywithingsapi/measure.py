@@ -71,7 +71,7 @@ def data_measure_getactivity(
     }
 
 
-def create_data_measure_getintradayactivity(
+def data_measure_getintradayactivity(
         startdate: int = None,
         enddate: int = None,
         lastupdate: int = None,

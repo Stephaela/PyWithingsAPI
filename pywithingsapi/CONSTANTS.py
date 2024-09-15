@@ -100,6 +100,29 @@ MEASURE_GETMEAS_DATA_FIELDS_STR = list(MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.va
 
 MEASURE_GETMEAS_DATA_FIELDS_STR_TO_INT = {value: key for key, value in MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.items()}
 
+MEASURE_WORKOUTS_DATA_FIELDS = [
+    "calories",
+    "intensity",
+    "manual_distance",
+    "manual_calories",
+    "hr_average",
+    "hr_min",
+    "hr_max",
+    "hr_zone_0",
+    "hr_zone_1",
+    "hr_zone_2",
+    "hr_zone_3",
+    "pause_duration",
+    "algo_pause_duration",
+    "spo2_average",
+    "steps",
+    "distance",
+    "elevation",
+    "pool_laps",
+    "strokes",
+    "pool_length",
+]
+
 SLEEP_GET_DATA_FIELDS = [
     "hr",
     "rr",

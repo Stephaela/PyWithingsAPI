@@ -30,6 +30,25 @@ TIME_DIFF_GREATER_24H_WARNING_STR = (
         + "Only data for first 24h after startdate will be returned."
 )
 
+MEASURE_GETACTIVITY_DATA_FIELDS = [
+    "steps",
+    "distance",
+    "elevation",
+    "soft",
+    "moderate",
+    "intense",
+    "active",
+    "calories",
+    "totalcalories",
+    "hr_average",
+    "hr_min",
+    "hr_max",
+    "hr_zone_0",
+    "hr_zone_1",
+    "hr_zone_2",
+    "hr_zone_3"
+]
+
 MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR = {
     1: "weight",
     4: "height",

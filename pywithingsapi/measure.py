@@ -202,6 +202,32 @@ def data_measure_getmeas(
     }
 
 
+def data_measure_getworkouts(
+    startdate: int = None,
+    enddate: int = None,
+    lastupdate: int = None,
+    offset: int = 0,
+    data_fields: list[str] = CONST.MEASURE_WORKOUTS_DATA_FIELDS
+) -> dict:
+
+    startdateymd, enddateymd, lastupdate = \
+        utils.handle_start_end_update_ymd(startdate, enddate, lastupdate)
+
+    for data_field in data_fields:
+        if data_field not in CONST.MEASURE_WORKOUTS_DATA_FIELDS:
+            warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
+            data_fields.remove(data_field)
+
+    return {
+        "action": "getworkouts",
+        "startdateymd": startdateymd,
+        "enddateymd": enddateymd,
+        "lastupdate": lastupdate,
+        "offset": offset,
+        "data_fields": ",".join(data_fields)
+    }
+
+
 def post_request_measure(data: dict, user: WithingsUser, to_json: bool = False) -> dict:
     """
     Sends a POST request to the Withings API to retrieve measurements, activity or workout data.

@@ -71,6 +71,59 @@ def data_measure_getactivity(
     }
 
 
+def create_data_measure_getintradayactivity(
+        startdate: int = None,
+        enddate: int = None,
+        lastupdate: int = None,
+        data_fields: str | list[str] = CONST.MEASURE_INTRADAYACTIVITY_DATA_FIELDS
+) -> dict:
+    """
+    Creates a dictionary for retrieving intraday activity data.
+    At least one of the parameters startdate and enddate are required.
+
+    Args:
+        startdate (int): startdate in unix format, default is None
+        enddate (int): enddate in unix format, default is None
+        lastupdate (int, optional): date in unix format, default is None
+        data_fields (str or list, optional): standard value is
+            `INTRADAYACTIVITY_DATA_FIELDS` in `CONSTANTS.py`
+
+    Returns:
+        dict: a dictionary containing the action type and the
+            request parameters. Use it as parameter in the
+            `data_measure_getmeas`function in order to
+            retrieve the desired data.
+
+    Raises:
+        ValueError: if neither startdate nor enddate are provided
+    """
+    if startdate is None and enddate is None:
+        raise ValueError("At least one of the parameters startdate and enddate must be provided.")
+
+    utils.warn_if_end_before_start(startdate, enddate)
+    utils.warn_if_start_equals_end(startdate, enddate)
+    utils.warn_if_time_diff_greater_24h(startdate, enddate)
+
+    if isinstance(data_fields, str):
+        data_fields = [data_fields]  # Normalize single value to list
+
+    for data_field in data_fields:
+        if data_field not in CONST.MEASURE_GETACTIVITY_DATA_FIELDS:
+            warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
+            data_fields.remove(data_field)
+
+    if len(data_fields) == 0:
+        data_fields = CONST.MEASURE_GETACTIVITY_DATA_FIELDS
+
+    return {
+        "action": "getintradayactivity",
+        "startdate": startdate,
+        "enddate": enddate,
+        "lastupdate": lastupdate,
+        "data_fields": ",".join(data_fields)
+    }
+
+
 def data_measure_getmeas(
         startdate: int = None,
         enddate: int = None,

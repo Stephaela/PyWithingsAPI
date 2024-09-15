@@ -30,7 +30,7 @@ TIME_DIFF_GREATER_24H_WARNING_STR = (
         + "Only data for first 24h after startdate will be returned."
 )
 
-MEASURE_GETACTIVITY_DATA_FIELDS = [
+MEASURE_GET_ACTIVITY_DATA_FIELDS = [
     "steps",
     "distance",
     "elevation",
@@ -49,7 +49,7 @@ MEASURE_GETACTIVITY_DATA_FIELDS = [
     "hr_zone_3"
 ]
 
-MEASURE_INTRADAYACTIVITY_DATA_FIELDS = [
+MEASURE_GET_INTRADAYACTIVITY_DATA_FIELDS = [
     "steps",
     "elevation",
     "calories",
@@ -61,7 +61,7 @@ MEASURE_INTRADAYACTIVITY_DATA_FIELDS = [
     "spo2_auto",
 ]
 
-MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR = {
+MEASURE_GET_MEAS_DATA_FIELDS_INT_TO_STR = {
     1: "weight",
     4: "height",
     5: "fat_free_mass",
@@ -95,12 +95,12 @@ MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR = {
     196: "electrodermal_activity",
 }
 
-MEASURE_GETMEAS_DATA_FIELDS_INT = list(MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.keys())
-MEASURE_GETMEAS_DATA_FIELDS_STR = list(MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.values())
+MEASURE_GET_MEAS_DATA_FIELDS_INT = list(MEASURE_GET_MEAS_DATA_FIELDS_INT_TO_STR.keys())
+MEASURE_GET_MEAS_DATA_FIELDS_STR = list(MEASURE_GET_MEAS_DATA_FIELDS_INT_TO_STR.values())
 
-MEASURE_GETMEAS_DATA_FIELDS_STR_TO_INT = {value: key for key, value in MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.items()}
+MEASURE_GET_MEAS_DATA_FIELDS_STR_TO_INT = {value: key for key, value in MEASURE_GET_MEAS_DATA_FIELDS_INT_TO_STR.items()}
 
-MEASURE_WORKOUTS_DATA_FIELDS = [
+MEASURE_GET_WORKOUTS_DATA_FIELDS = [
     "calories",
     "intensity",
     "manual_distance",

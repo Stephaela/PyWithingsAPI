@@ -13,12 +13,12 @@ from pywithingsapi import utils
 from pywithingsapi.withings_user import WithingsUser
 
 
-def data_measure_getactivity(
+def data_measure_get_activity(
         startdate: int = None,
         enddate: int = None,
         lastupdate: int = None,
         offset: int = 0,
-        data_fields: str | list[str] = CONST.MEASURE_GETACTIVITY_DATA_FIELDS
+        data_fields: str | list[str] = CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS
 ) -> dict:
     """
         Creates a dictionary for retrieving activity data within a specified date range or after a specified
@@ -36,7 +36,7 @@ def data_measure_getactivity(
             lastupdate (int, optional): The last update timestamp for the data (Unix timestamp).
             offset (int, optional): The offset for paginated data. Defaults to 0.
             data_fields (str or list, optional): A list of data fields to be retrieved.
-                Defaults to `CONST.MEASURE_GETACTIVITY_DATA_FIELDS`.
+                Defaults to `CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS`.
 
         Returns:
             dict: A dictionary containing the parameters for the `getactivity` action, including:
@@ -54,12 +54,12 @@ def data_measure_getactivity(
         data_fields = [data_fields]  # Normalize single value to list
 
     for data_field in data_fields:
-        if data_field not in CONST.MEASURE_GETACTIVITY_DATA_FIELDS:
+        if data_field not in CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS:
             warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
             data_fields.remove(data_field)
 
     if len(data_fields) == 0:
-        data_fields = CONST.MEASURE_GETACTIVITY_DATA_FIELDS
+        data_fields = CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS
 
     return {
         "action": "getactivity",
@@ -71,11 +71,11 @@ def data_measure_getactivity(
     }
 
 
-def data_measure_getintradayactivity(
+def data_measure_get_intradayactivity(
         startdate: int = None,
         enddate: int = None,
         lastupdate: int = None,
-        data_fields: str | list[str] = CONST.MEASURE_INTRADAYACTIVITY_DATA_FIELDS
+        data_fields: str | list[str] = CONST.MEASURE_GET_INTRADAYACTIVITY_DATA_FIELDS
 ) -> dict:
     """
     Creates a dictionary for retrieving intraday activity data.
@@ -108,12 +108,12 @@ def data_measure_getintradayactivity(
         data_fields = [data_fields]  # Normalize single value to list
 
     for data_field in data_fields:
-        if data_field not in CONST.MEASURE_GETACTIVITY_DATA_FIELDS:
+        if data_field not in CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS:
             warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
             data_fields.remove(data_field)
 
     if len(data_fields) == 0:
-        data_fields = CONST.MEASURE_GETACTIVITY_DATA_FIELDS
+        data_fields = CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS
 
     return {
         "action": "getintradayactivity",
@@ -124,13 +124,13 @@ def data_measure_getintradayactivity(
     }
 
 
-def data_measure_getmeas(
+def data_measure_get_meas(
         startdate: int = None,
         enddate: int = None,
         lastupdate: int = None,
         offset: int = 0,
         category: int = 1,
-        data_fields: int | str | list[int | str] = CONST.MEASURE_GETMEAS_DATA_FIELDS_INT
+        data_fields: int | str | list[int | str] = CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT
 ) -> dict:
     """
     Prepares a dictionary of parameters for the Withings API 'getmeas' action.
@@ -152,7 +152,7 @@ def data_measure_getmeas(
         category (int, optional): Category of the measures, either 1 (real measures) or 2 (user objectives).
             Defaults to 1.
         data_fields (int | str | list[int | str], optional): The fields to retrieve, as integers, strings, or a list
-            of integers and strings. Defaults to CONST.MEASURE_GETMEAS_DATA_FIELDS_INT.
+            of integers and strings. Defaults to CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT.
 
     Returns:
         dict: A dictionary with the necessary parameters to send to the Withings API.
@@ -171,15 +171,15 @@ def data_measure_getmeas(
         data_fields = [data_fields]  # Normalize single value to list
 
     for data_field in data_fields:
-        if isinstance(data_field, int) and data_field in CONST.MEASURE_GETMEAS_DATA_FIELDS_INT:
+        if isinstance(data_field, int) and data_field in CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT:
             meastypes_list.append(data_field)
-        elif isinstance(data_field, str) and data_field in CONST.MEASURE_GETMEAS_DATA_FIELDS_STR:
-            meastypes_list.append(CONST.MEASURE_GETMEAS_DATA_FIELDS_STR_TO_INT[data_field])
+        elif isinstance(data_field, str) and data_field in CONST.MEASURE_GET_MEAS_DATA_FIELDS_STR:
+            meastypes_list.append(CONST.MEASURE_GET_MEAS_DATA_FIELDS_STR_TO_INT[data_field])
         else:
             warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
 
     if len(meastypes_list) == 0:
-        meastypes = ",".join(map(str, CONST.MEASURE_GETMEAS_DATA_FIELDS_INT))
+        meastypes = ",".join(map(str, CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT))
     elif len(meastypes_list) == 1:
         meastype = meastypes_list[0]
         meastypes = None
@@ -202,19 +202,19 @@ def data_measure_getmeas(
     }
 
 
-def data_measure_getworkouts(
+def data_measure_get_workouts(
     startdate: int = None,
     enddate: int = None,
     lastupdate: int = None,
     offset: int = 0,
-    data_fields: list[str] = CONST.MEASURE_WORKOUTS_DATA_FIELDS
+    data_fields: list[str] = CONST.MEASURE_GET_WORKOUTS_DATA_FIELDS
 ) -> dict:
 
     startdateymd, enddateymd, lastupdate = \
         utils.handle_start_end_update_ymd(startdate, enddate, lastupdate)
 
     for data_field in data_fields:
-        if data_field not in CONST.MEASURE_WORKOUTS_DATA_FIELDS:
+        if data_field not in CONST.MEASURE_GET_WORKOUTS_DATA_FIELDS:
             warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
             data_fields.remove(data_field)
 

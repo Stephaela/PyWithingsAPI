@@ -21,7 +21,8 @@ def data_measure_getactivity(
         data_fields: str | list[str] = CONST.MEASURE_GETACTIVITY_DATA_FIELDS
 ) -> dict:
     """
-        Retrieves activity data within a specified date range or after a specified last update time.
+        Creates a dictionary for retrieving activity data within a specified date range or after a specified
+        last update time.
         Either the parameter pair startdate and enddate, or the parameter lastupdate are required,
         but not both. These parameters will be handled in the utils.py module.
 
@@ -34,7 +35,7 @@ def data_measure_getactivity(
             enddate (int, optional): The end date for the data summary (Unix timestamp).
             lastupdate (int, optional): The last update timestamp for the data (Unix timestamp).
             offset (int, optional): The offset for paginated data. Defaults to 0.
-            data_fields (list, optional): A list of data fields to be retrieved.
+            data_fields (str or list, optional): A list of data fields to be retrieved.
                 Defaults to `CONST.MEASURE_GETACTIVITY_DATA_FIELDS`.
 
         Returns:

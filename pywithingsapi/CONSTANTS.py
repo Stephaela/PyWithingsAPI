@@ -30,6 +30,45 @@ TIME_DIFF_GREATER_24H_WARNING_STR = (
         + "Only data for first 24h after startdate will be returned."
 )
 
+MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR = {
+    1: "weight",
+    4: "height",
+    5: "fat_free_mass",
+    6: "fat_ratio",
+    8: "fat_mass_weight",
+    9: "diastolic_bp",
+    10: "systolic_bp",
+    11: "heart_pulse",
+    12: "temperature",
+    54: "spo2",
+    71: "body_temperature",
+    73: "skin_temperature",
+    76: "muscle_mass",
+    77: "hydration",
+    88: "bone_mass",
+    91: "pulse_wave_velocity",
+    123: "vo2_max",
+    130: "afib",
+    135: "qrs_duration",
+    136: "pr_duration",
+    137: "qt_duration",
+    138: "qtc_duration",
+    139: "afib_ppg",
+    155: "vascular_age",
+    167: "nerve_health",
+    168: "extracellular_water",
+    169: "intracellular_water",
+    170: "visceral_fat",
+    174: "fat_mass_segments",
+    175: "muscle_mass_segments",
+    196: "electrodermal_activity",
+}
+
+MEASURE_GETMEAS_DATA_FIELDS_INT = list(MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.keys())
+MEASURE_GETMEAS_DATA_FIELDS_STR = list(MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.values())
+
+MEASURE_GETMEAS_DATA_FIELDS_STR_TO_INT = {value: key for key, value in MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR.items()}
+
 SLEEP_GET_DATA_FIELDS = [
     "hr",
     "rr",

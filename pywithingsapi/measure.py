@@ -2,7 +2,7 @@
 measure.py module
 
 This module provides functionality for interacting with the Withings API to
-retrieve user measurement data.
+retrieve user measurement and activity data.
 """
 
 import warnings
@@ -11,6 +11,63 @@ from pywithingsapi import CONSTANTS as CONST
 from pywithingsapi import post_request
 from pywithingsapi import utils
 from pywithingsapi.withings_user import WithingsUser
+
+
+def data_measure_getactivity(
+        startdate: int = None,
+        enddate: int = None,
+        lastupdate: int = None,
+        offset: int = 0,
+        data_fields: str | list[str] = CONST.MEASURE_GETACTIVITY_DATA_FIELDS
+) -> dict:
+    """
+        Retrieves activity data within a specified date range or after a specified last update time.
+        Either the parameter pair startdate and enddate, or the parameter lastupdate are required,
+        but not both. These parameters will be handled in the utils.py module.
+
+        Users can also specify which fields to retrieve in the response by passing them in `data_fields`.
+        Invalid fields will be removed from the request and a warning will be issued. If no valid fields remain,
+        all fields will be requested by default.
+
+        Args:
+            startdate (int, optional): The start date for the data summary (Unix timestamp).
+            enddate (int, optional): The end date for the data summary (Unix timestamp).
+            lastupdate (int, optional): The last update timestamp for the data (Unix timestamp).
+            offset (int, optional): The offset for paginated data. Defaults to 0.
+            data_fields (list, optional): A list of data fields to be retrieved.
+                Defaults to `CONST.MEASURE_GETACTIVITY_DATA_FIELDS`.
+
+        Returns:
+            dict: A dictionary containing the parameters for the `getactivity` action, including:
+                - action (str): The action being performed (always "getactivity").
+                - startdateymd (str): The start date in YYYY-MM-DD format.
+                - enddateymd (str): The end date in YYYY-MM-DD format.
+                - lastupdate (int): The last update timestamp in UNIX format.
+                - offset (int): The offset for the request.
+                - data_fields (str): A comma-separated string of valid data fields to retrieve.
+    """
+    startdateymd, enddateymd, lastupdate = \
+        utils.handle_start_end_update_ymd(startdate, enddate, lastupdate)
+
+    if isinstance(data_fields, str):
+        data_fields = [data_fields]  # Normalize single value to list
+
+    for data_field in data_fields:
+        if data_field not in CONST.MEASURE_GETACTIVITY_DATA_FIELDS:
+            warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
+            data_fields.remove(data_field)
+
+    if len(data_fields) == 0:
+        data_fields = CONST.MEASURE_GETACTIVITY_DATA_FIELDS
+
+    return {
+        "action": "getactivity",
+        "startdateymd": startdateymd,
+        "enddateymd": enddateymd,
+        "lastupdate": lastupdate,
+        "offset": offset,
+        "data_fields": ",".join(data_fields)
+    }
 
 
 def data_measure_getmeas(

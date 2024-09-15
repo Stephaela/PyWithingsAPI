@@ -49,6 +49,18 @@ MEASURE_GETACTIVITY_DATA_FIELDS = [
     "hr_zone_3"
 ]
 
+MEASURE_INTRADAYACTIVITY_DATA_FIELDS = [
+    "steps",
+    "elevation",
+    "calories",
+    "distance",
+    "stroke",
+    "pool_lap",
+    "duration",
+    "heart_rate",
+    "spo2_auto",
+]
+
 MEASURE_GETMEAS_DATA_FIELDS_INT_TO_STR = {
     1: "weight",
     4: "height",

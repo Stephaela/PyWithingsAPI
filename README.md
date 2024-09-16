@@ -64,7 +64,7 @@ you can reuse it.
 Your access token will be valid for 3h. After that, you can use 
 your refresh token to get a new set of tokens.
 
-    user.refresh_existing_token()
+    my_user.refresh_existing_token()
 
 ## General information about accessing data
 

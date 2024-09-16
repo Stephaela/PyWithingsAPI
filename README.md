@@ -148,3 +148,10 @@ request, and then send the POST request with this data and the instance of Withi
     data = measure.data_measure_get_activity(startdate=**two_weeks_ago**, enddate=now, data_fields="steps")
     
     measure_dct = measure.post_request_measure(data, my_user, to_json=True)
+
+## Working with the data
+
+The data from the WithingsAPI are nested dictionaries. To work with them as Pandas dataframes, 
+they need to be flattened. This can be done with the functions in the `api_data_utils.py` module.
+
+    df = api_data_utils.dict_to_pandas_df(measure_dct)

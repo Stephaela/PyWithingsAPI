@@ -59,7 +59,7 @@ def data_sleep_summary(
         enddate: int = None,
         lastupdate: int = None,
         offset: int = 0,
-        data_fields: List[str] = CONST.SLEEP_SUMMARY_DATA_FIELDS
+        data_fields: list[str] = CONST.SLEEP_SUMMARY_DATA_FIELDS
 ) -> dict:
     """
     Creates a data dictionary for retrieving a summary of sleep data from the
@@ -74,8 +74,11 @@ def data_sleep_summary(
 
     Args:
         startdate (int, optional): The start date for the data summary (Unix timestamp).
+            Defaults to None.
         enddate (int, optional): The end date for the data summary (Unix timestamp).
+            Defaults to None.
         lastupdate (int, optional): The last update timestamp for the data (Unix timestamp).
+            Defaults to None.
         offset (int, optional): The offset for paginated data. Defaults to 0.
         data_fields (list, optional): A list of data fields to be included in the summary.
             Defaults to `CONST.SLEEP_SUMMARY_DATA_FIELDS`.

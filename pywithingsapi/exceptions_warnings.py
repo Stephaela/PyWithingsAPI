@@ -1,8 +1,10 @@
 """
-exceptions.py module
+exceptions_warnings.py module
 
-This module provides custom exceptions for the PyWithingsAPI project.
+This module provides custom exceptions and custom warnings for the PyWithingsAPI project.
 """
+
+import warnings
 
 
 class WithingsStatusNotZeroError(Exception):
@@ -24,3 +26,12 @@ class WithingsStatusNotZeroError(Exception):
             f"Data: {data}"
         )
         super().__init__(self.message)
+
+
+class InvalidDataFieldWarning(Warning):
+    def __init__(self, fct_name, data_field):
+        # Format the message dynamically with the parameter
+        message = f"{data_field} is not a valid data field for {fct_name.removeprefix("data_")} " + \
+            "and will not be used in the request."
+        # Initialize the base Warning class with the constructed message
+        super().__init__(message)

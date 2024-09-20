@@ -182,6 +182,7 @@ def data_measure_get_meas(
             warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_measure_get_meas.__name__, data_field))
 
     if len(meastypes_list) == 0:  # if no valid data field remains after removing invalid data fields
+        meastype = None
         meastypes = ",".join(map(str, CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT))
     elif len(meastypes_list) == 1:
         meastype = meastypes_list[0]

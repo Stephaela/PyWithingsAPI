@@ -3,6 +3,7 @@ api_data_utils.py module
 
 Module for utility functions for Withings API data
 """
+
 import pandas as pd
 
 
@@ -62,25 +63,27 @@ def recursive_flatten(df: pd.DataFrame) -> pd.DataFrame:
     return recursive_flatten(df)  # Recursively process remaining nested structures
 
 
-def dict_to_pandas_df(data_dict: dict) -> pd.DataFrame:
+def api_data_to_pandas_df(api_data: dict | list) -> pd.DataFrame:
     """
-    Convert a dictionary to a Pandas DataFrame and recursively flatten any nested structures.
+    Converts the API data to a Pandas DataFrame and recursively flatten any nested structures.
 
-    This function takes a dictionary as input, converts it to a Pandas DataFrame, and then
-    recursively flattens any nested dictionaries or lists within the DataFrame.
+    This function takes the API data (which you got as the answer from a POST request) as input,
+    converts it to a Pandas DataFrame, and then recursively flattens any nested dictionaries or
+    lists within it.
 
     Args:
-        data_dict (dict): The input dictionary to be converted into a DataFrame.
+        api_data (dict or list): The API data to be converted into a DataFrame.
 
     Returns:
         pandas.DataFrame: The flattened DataFrame.
 
     Raises:
-        ValueError: If the dictionary cannot be converted to a DataFrame or if any column
+        ValueError: If the API data cannot be converted to a DataFrame or if any column
                     contains unsupported data types for flattening.
     """
     try:
-        initial_df = pd.DataFrame([data_dict])  # Convert the initial data into a DataFrame
+        initial_df = pd.DataFrame(api_data)  # Converts the initial API data into a DataFrame
     except ValueError as e:
-        raise ValueError(f"Cannot convert initial data to DataFrame: {e}")
+        raise ValueError(f"Cannot convert initial API data to DataFrame: {e}")
+
     return recursive_flatten(initial_df)  # Call recursive function to flatten the DataFrame

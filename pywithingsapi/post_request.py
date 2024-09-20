@@ -10,7 +10,7 @@ import os
 import time
 
 from pywithingsapi import CONSTANTS as CONST
-from pywithingsapi import exceptions
+from pywithingsapi import exceptions_warnings
 from pywithingsapi.withings_user import WithingsUser
 
 
@@ -69,7 +69,7 @@ def get_data_dict(data: dict, url: str, user: WithingsUser, to_json: bool = Fals
     dct = json.loads(response.content)
 
     if dct["status"] != 0:
-        raise exceptions.WithingsStatusNotZeroError(data, url, dct)
+        raise exceptions_warnings.WithingsStatusNotZeroError(data, url, dct)
 
     if to_json:
         user_folder = f"user_{user.userid}"

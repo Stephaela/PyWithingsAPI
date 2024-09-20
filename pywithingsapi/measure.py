@@ -8,6 +8,7 @@ retrieve user measurement and activity data.
 import warnings
 
 from pywithingsapi import CONSTANTS as CONST
+from pywithingsapi import exceptions_warnings
 from pywithingsapi import post_request
 from pywithingsapi import utils
 from pywithingsapi.withings_user import WithingsUser
@@ -55,10 +56,10 @@ def data_measure_get_activity(
 
     for data_field in data_fields:
         if data_field not in CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS:
-            warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
+            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_measure_get_activity.__name__, data_field))
             data_fields.remove(data_field)
 
-    if len(data_fields) == 0:
+    if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
         data_fields = CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS
 
     return {
@@ -109,11 +110,13 @@ def data_measure_get_intradayactivity(
 
     for data_field in data_fields:
         if data_field not in CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS:
-            warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
+            warnings.warn(
+                exceptions_warnings.InvalidDataFieldWarning(data_measure_get_intradayactivity.__name__, data_field)
+            )
             data_fields.remove(data_field)
 
-    if len(data_fields) == 0:
-        data_fields = CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS
+    if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
+        data_fields = CONST.MEASURE_GET_INTRADAYACTIVITY_DATA_FIELDS
 
     return {
         "action": "getintradayactivity",
@@ -176,9 +179,9 @@ def data_measure_get_meas(
         elif isinstance(data_field, str) and data_field in CONST.MEASURE_GET_MEAS_DATA_FIELDS_STR:
             meastypes_list.append(CONST.MEASURE_GET_MEAS_DATA_FIELDS_STR_TO_INT[data_field])
         else:
-            warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
+            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_measure_get_meas.__name__, data_field))
 
-    if len(meastypes_list) == 0:
+    if len(meastypes_list) == 0:  # if no valid data field remains after removing invalid data fields
         meastypes = ",".join(map(str, CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT))
     elif len(meastypes_list) == 1:
         meastype = meastypes_list[0]
@@ -215,8 +218,11 @@ def data_measure_get_workouts(
 
     for data_field in data_fields:
         if data_field not in CONST.MEASURE_GET_WORKOUTS_DATA_FIELDS:
-            warnings.warn(f"{data_field} is not a valid data field and will not be sent in the request.")
+            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_measure_get_workouts.__name__, data_field))
             data_fields.remove(data_field)
+
+    if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
+        data_fields = CONST.MEASURE_GET_WORKOUTS_DATA_FIELDS
 
     return {
         "action": "getworkouts",

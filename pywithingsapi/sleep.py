@@ -6,10 +6,10 @@ This module provides functions for retrieving sleep data from the Withings API.
 It includes functionality for fetching high-frequency sleep data, sleep summaries, and handling
 POST requests to the Withings API.
 """
-
-from typing import List
+import warnings
 
 from pywithingsapi import CONSTANTS as CONST
+from pywithingsapi import exceptions_warnings
 from pywithingsapi import post_request
 from pywithingsapi import utils
 from pywithingsapi.withings_user import WithingsUser
@@ -18,7 +18,7 @@ from pywithingsapi.withings_user import WithingsUser
 def data_sleep_get(
         startdate: int,
         enddate: int,
-        data_fields: List[str] = CONST.SLEEP_GET_DATA_FIELDS) -> dict:
+        data_fields: list[str] = CONST.SLEEP_GET_DATA_FIELDS) -> dict:
     """
     Creates a data dictionary for making a POST request to get sleep data
     captured at high frequency, including sleep stages, from the
@@ -37,15 +37,19 @@ def data_sleep_get(
     Returns:
         dict: A dictionary containing the data for making the sleep
             data retrieval request, to be used in a POST request.
-
-    Raises:
-        ValueError: If required parameters are missing or invalid data fields are provided.
     """
     utils.warn_if_end_before_start(startdate, enddate)
     utils.warn_if_start_equals_end(startdate, enddate)
     utils.warn_if_time_diff_greater_24h(startdate, enddate)
-    if not all(x in CONST.SLEEP_GET_DATA_FIELDS for x in data_fields):
-        raise ValueError("At least one data field in the request does not exist.")
+
+    for data_field in data_fields:
+        if data_field not in CONST.SLEEP_GET_DATA_FIELDS:
+            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_sleep_get.__name__, data_field))
+            data_fields.remove(data_field)
+
+    if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
+        data_fields = CONST.SLEEP_GET_DATA_FIELDS
+
     return {'action': "get", 'startdate': startdate,
             'enddate': enddate, 'data_fields': ",".join(data_fields)}
 
@@ -79,16 +83,19 @@ def data_sleep_summary(
     Returns:
         dict: A dictionary containing the data for making the sleep summary
             request, to be used in a POST request.
-
-    Raises:
-        ValueError: If invalid data fields are provided, or if the parameter offset is not
-            a non-negative integer.
     """
     startdateymd, enddateymd, lastupdate = \
         utils.handle_start_end_update_ymd(startdate, enddate, lastupdate)
     utils.ensure_non_negative_int_or_none(offset)
-    if not all(x in CONST.SLEEP_SUMMARY_DATA_FIELDS for x in data_fields):
-        raise ValueError("At least one data field in the request does not exist.")
+
+    for data_field in data_fields:
+        if data_field not in CONST.SLEEP_SUMMARY_DATA_FIELDS:
+            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_sleep_summary.__name__, data_field))
+            data_fields.remove(data_field)
+
+    if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
+        data_fields = CONST.SLEEP_SUMMARY_DATA_FIELDS
+
     return {'action': "getsummary", 'startdateymd': startdateymd,
             'enddateymd': enddateymd, 'lastupdate': lastupdate,
             'offset': offset, 'data_fields': ",".join(data_fields)}

@@ -1,21 +1,33 @@
 # PyWithingsAPI
 
-Library in Python for the Withings API
+PyWithingsAPI is a Python library for interaction with the Withings API. 
+After the authentication process, you can access health and fitness data 
+from the Withings API.
 
----
+## Prerequisites and installation
+
+This code was written in Python 3.12.5. To use this library, please clone 
+the repository and install the libraries `requests` and `pandas`.
+
+Please note that using this library is not possible without creating a 
+Withings developer account and an application first.
 
 ## The Withings API
+
+### General information about the Withings API
 
 More information about the Withings API can be found in the 
 [Withings Developer Portal](https://developer.withings.com/) 
 and the [Withings API Reference](https://developer.withings.com/api-reference/)
+
+### Creating a developer account and an application
 
 At first, you create a Withings developer account on the 
 [Withings Developer Dashboard](https://developer.withings.com/dashboard/) 
 and log in. Then, choose the environment on which your application 
 will be running. Only the public cloud is open to everyone. After 
 that, choose what kind of application you plan on making. Only the 
-public API integration if open to everyone. 
+public API integration is open to everyone. 
 
 Now enter your application name, description and redirect URL. I chose 
 http://localhost:1400/ as my redirect URL, but please note that 
@@ -26,23 +38,25 @@ them during your integration phase but your application will be
 restricted to 10 users.")
 
 Then, Withings will show you your client ID and client secret. 
-Store them safely.
+Store them securely.
 
 ## Getting a token
 
 To access user data, you need a valid access token. When you
 want to get your first access token, follow these steps:
 
-### Create new instances of WithingsClient and WithingsUser
+### Create a new instance of WithingsClient
 
 Store your client ID, client secret and redirect URI in variables. Then, 
 create a new instance of WithingsClient
 
+    from pywithingsapi import withings_client
+    
     my_client_id = "---"
     my_client_secret = "---"
     my_redirect_uri = "---"
     
-    api_client = withings_client.WithingsClient(
+    my_api_client = withings_client.WithingsClient(
         my_client_id,
         my_client_secret,
         my_redirect_uri)
@@ -51,18 +65,29 @@ If everything works fine, a data folder with your client parameters
 will be created. This file can be used to reuse the user client 
 you created.
 
-To create a new instance of WithingsUser, do the following:
+### Create a new instance of WithingsUser
 
-    my_user = withings_user.WithingsUser(api_client)
+To create a new instance of WithingsUser using `my_api_client` from above, 
+do the following:
+
+    from pywithingsapi import withings_user
+    
+    my_user = withings_user.WithingsUser(my_api_client)
 
 Copy the authentication URL and paste it in your browser. 
 Log in and copy the URL you are redirected to and paste it. 
-If everything works fine, a user folder with a JSOn with your 
+If everything works fine, a user folder with a JSON with your 
 user parameters including your tokens will be created with which 
 you can reuse it.
 
+### Refreshing your access token
+
 Your access token will be valid for 3h. After that, you can use 
-your refresh token to get a new set of tokens.
+your refresh token to get a new set of tokens. This is supposed to 
+happen automatically if your access token is no longer valid and you 
+try to access data. 
+
+You can also refresh your access token manually.
 
     my_user.refresh_existing_token()
 
@@ -137,17 +162,19 @@ necessary to repeat this several times.
 
 ## Accessing data
 
-Accessing data works like that (using Get Activity as an example): First, create the data for the 
-request, and then send the POST request with this data and the instance of WithingsUser created above.
+Accessing data works like that (using Get Activity as an example): 
+First, create the data for the request, and then send the POST request 
+with this data and the instance of WithingsUser `my_user` created above.
 
-    now = dt.datetime.now() 
-    two_weeks_ago = now - dt.timedelta(weeks=2)
-    now = int(dt.datetime.timestamp(now))
-    two_weeks_ago = int(dt.datetime.timestamp(two_weeks_ago))
+    import datetime as dt
+    from pywithingsapi import measure
+
+    now = int(dt.datetime.timestamp(dt.datetime.now()))
+    two_weeks_ago = int(dt.datetime.timestamp(dt.datetime.now() - dt.timedelta(weeks=2)))
     
     post_request_dict = measure.data_measure_get_activity(startdate=two_weeks_ago, enddate=now, data_fields="steps")
     
-    activity_api_data = measure.post_request_measure(post_request_dict, my_user, to_json=True)
+    activity_api_data = measure.post_request_measure(post_request_dict, my_user)
 
 ## Working with the data
 
@@ -155,4 +182,6 @@ To work with the API data, it is often useful to convert it to Pandas Dataframes
 the API data (which consists of nested dictionaries and lists) needs to be flattened. 
 This can be done with the functions in the `api_data_utils.py` module.
 
+    from pywithingsapi import api_data_utils
+    
     activity_df = api_data_utils.api_data_to_pandas_df(activity_api_data)

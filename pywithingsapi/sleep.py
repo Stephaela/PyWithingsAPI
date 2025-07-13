@@ -44,7 +44,11 @@ def data_sleep_get(
 
     for data_field in data_fields:
         if data_field not in CONST.SLEEP_GET_DATA_FIELDS:
-            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_sleep_get.__name__, data_field))
+            warnings.warn(
+                exceptions_warnings.InvalidDataFieldWarning(
+                    data_sleep_get.__name__, data_field
+                )
+            )
             data_fields.remove(data_field)
 
     if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
@@ -93,7 +97,11 @@ def data_sleep_summary(
 
     for data_field in data_fields:
         if data_field not in CONST.SLEEP_SUMMARY_DATA_FIELDS:
-            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_sleep_summary.__name__, data_field))
+            warnings.warn(
+                exceptions_warnings.InvalidDataFieldWarning(
+                    data_sleep_summary.__name__, data_field
+                )
+            )
             data_fields.remove(data_field)
 
     if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
@@ -114,8 +122,10 @@ def post_request_sleep(data: dict, user: WithingsUser, to_json: bool = False) ->
     Args:
         data (dict, required): A dictionary containing the request data
             (from `data_sleep_get` or `data_sleep_summary`).
-        user (WithingsUser, required): An instance of `WithingsUser` containing the user credentials and headers.
-        to_json (bool, optional): If set to True, the response is saved as a JSON file in the user's folder.
+        user (WithingsUser, required): An instance of `WithingsUser` containing
+            the user credentials and headers.
+        to_json (bool, optional): If set to True, the response is saved as a JSON file
+            in the user's folder.
             Defaults to False.
 
     Returns:

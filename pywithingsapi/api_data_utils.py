@@ -17,7 +17,8 @@ def flatten_column(df: pd.DataFrame, col: str) -> pd.DataFrame:
 
     Args:
         df (pandas.DataFrame): The input DataFrame containing the column to be flattened.
-        col (str): The name of the column to flatten. The column should contain dictionaries or lists.
+        col (str): The name of the column to flatten.
+            The column should contain dictionaries or lists.
 
     Returns:
         pandas.DataFrame: A new DataFrame with the specified column flattened.
@@ -28,11 +29,10 @@ def flatten_column(df: pd.DataFrame, col: str) -> pd.DataFrame:
     if df[col].apply(lambda x: isinstance(x, dict)).all():
         # Normalize dictionaries and join back
         return df.drop(columns=[col]).join(pd.json_normalize(df[col]), rsuffix=f'_{col}')
-    elif df[col].apply(lambda x: isinstance(x, list)).all():
+    if df[col].apply(lambda x: isinstance(x, list)).all():
         # Explode lists
         return df.explode(col).reset_index(drop=True)
-    else:
-        raise ValueError(f"Column '{col}' must contain either all dictionaries or all lists.")
+    raise ValueError(f"Column '{col}' must contain either all dictionaries or all lists.")
 
 
 def recursive_flatten(df: pd.DataFrame) -> pd.DataFrame:
@@ -52,7 +52,9 @@ def recursive_flatten(df: pd.DataFrame) -> pd.DataFrame:
     Raises:
         ValueError: If an error occurs while flattening a specific column.
     """
-    nested_columns = [col for col in df.columns if df[col].apply(lambda x: isinstance(x, (dict, list))).all()]
+    nested_columns = [
+        col for col in df.columns if df[col].apply(lambda x: isinstance(x, (dict, list))).all()
+    ]
     if not nested_columns:  # Base case: No nested structures left
         return df
     for col in nested_columns:

@@ -33,8 +33,9 @@ class WithingsClient:
         demo (bool): A flag indicating whether the client is in demo mode.
     """
 
-    def __init__(self, client_id: str, client_secret: str, redirect_uri: str, state: str = str(uuid.uuid4()),
-                 scope: str = CONST.STANDARD_SCOPE, demo: bool = False):
+    def __init__(self, client_id: str, client_secret: str, redirect_uri: str,
+                 state: str = str(uuid.uuid4()), scope: str = CONST.STANDARD_SCOPE,
+                 demo: bool = False):
         """
         Initializes a WithingsClient instance and stores the parameters in a JSON file.
 
@@ -42,9 +43,11 @@ class WithingsClient:
             client_id (str): The client ID for the Withings API.
             client_secret (str): The client secret for the Withings API.
             redirect_uri (str): The redirect URI for OAuth2 authentication.
-            state (str): A string to maintain state between the request and callback. Defaults to str(uuid.uuid4()).
+            state (str): A string to maintain state between the request and callback.
+                Defaults to str(uuid.uuid4()).
             scope (str, optional): The scope of the API access. Defaults to CONST.STANDARD_SCOPE.
-            demo (bool, optional): A flag indicating whether the client is in demo mode. Defaults to False.
+            demo (bool, optional): A flag indicating whether the client is in demo mode.
+                Defaults to False.
         """
         self.client_id = client_id
         self.client_secret = client_secret
@@ -61,8 +64,10 @@ class WithingsClient:
         Creates a WithingsClient instance from a dictionary.
 
         Args:
-            data (dict): A dictionary containing the parameters needed to create a WithingsClient instance.
-                Must include "client_id", "client_secret", "redirect_uri", "state", "scope", and "demo".
+            data (dict): A dictionary containing the parameters needed to create
+                a WithingsClient instance.
+                Must include "client_id", "client_secret", "redirect_uri", "state",
+                "scope", and "demo".
 
         Returns:
             WithingsClient: A new instance of WithingsClient.
@@ -73,7 +78,8 @@ class WithingsClient:
         """
         if not isinstance(data, dict):
             raise TypeError("Input must be a dictionary.")
-        if not all(key in data for key in ["client_id", "client_secret", "redirect_uri", "state", "scope", "demo"]):
+        if not all(key in data for key in
+                   ["client_id", "client_secret", "redirect_uri", "state", "scope", "demo"]):
             raise KeyError("At least one key is missing in the dictionary.")
         return cls(**data)
 
@@ -85,7 +91,8 @@ class WithingsClient:
         Creates the data directory if it does not exist and handles file writing errors.
 
         Raises:
-            OSError: If an error occurs while accessing or creating the dictionary or while writing the file.
+            OSError: If an error occurs while accessing or creating the dictionary
+                or while writing the file.
         """
         try:
             if not os.path.exists(CONST.DATA_DIR):
@@ -96,16 +103,20 @@ class WithingsClient:
                 for key in ["client_id", "client_secret", "redirect_uri", "state", "scope", "demo"]
             }
 
-            client_params_file_name = 'client_params_demo.json' if self.demo else 'client_params.json'
+            client_params_file_name = 'client_params_demo.json' if self.demo \
+                else 'client_params.json'
 
             try:
-                with open(os.path.join(CONST.DATA_DIR, client_params_file_name), 'w') as file:
+                with open(
+                        os.path.join(CONST.DATA_DIR, client_params_file_name), 'w', encoding='utf-8'
+                ) as file:
                     json.dump(client_params, file, indent=4)
             except OSError as e:
                 print(f"An error occurred while writing the file ({e}, {type(e).__name__}).")
 
         except OSError as e:
-            print(f"An error occurred while accessing or creating the directory ({e}, {type(e).__name__}).")
+            print(f"An error occurred while accessing or creating "
+                  f"the directory ({e}, {type(e).__name__}).")
 
     def create_auth_url(self) -> str:
         """
@@ -142,8 +153,8 @@ class WithingsClient:
             code (str): The authorization code obtained after the user authorizes the application.
 
         Returns:
-            requests.Response: The response object from the POST request, which contains the access token
-            if the request is successful.
+            requests.Response: The response object from the POST request,
+            which contains the access token if the request is successful.
         """
         url = CONST.URL_OAUTH2_V2
         data = {
@@ -162,7 +173,8 @@ class WithingsClient:
 
         It generates an authorization URL, asks the user to open it in a browser,
         and prompts them to input the URL they were redirected to after logging in. It extracts
-        the authorization code from the redirected URL and sends a request to obtain a new access token.
+        the authorization code from the redirected URL and sends a request
+        to obtain a new access token.
 
         Returns:
             dict: The response content parsed as a JSON object, containing the access token

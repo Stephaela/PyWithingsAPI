@@ -22,14 +22,16 @@ def data_measure_get_activity(
         data_fields: str | list[str] = CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS
 ) -> dict:
     """
-        Creates a dictionary for retrieving activity data within a specified date range or after a specified
-        last update time.
-        Either the parameter pair startdate and enddate, or the parameter lastupdate are required,
+        Creates a dictionary for retrieving activity data within a specified
+        date range or after a specified last update time.
+        Either the parameter pair startdate and enddate,
+        or the parameter lastupdate are required,
         but not both. These parameters will be handled in the utils.py module.
 
-        Users can also specify which fields to retrieve in the response by passing them in `data_fields`.
-        Invalid fields will be removed from the request and a warning will be issued. If no valid fields remain,
-        all fields will be requested by default.
+        Users can also specify which fields to retrieve in the response
+        by passing them in `data_fields`.
+        Invalid fields will be removed from the request and a warning
+        will be issued. If no valid fields remain, all fields will be requested by default.
 
         Args:
             startdate (int, optional): The start date for the data summary (Unix timestamp).
@@ -56,7 +58,11 @@ def data_measure_get_activity(
 
     for data_field in data_fields:
         if data_field not in CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS:
-            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_measure_get_activity.__name__, data_field))
+            warnings.warn(
+                exceptions_warnings.InvalidDataFieldWarning(
+                    data_measure_get_activity.__name__, data_field
+                )
+            )
             data_fields.remove(data_field)
 
     if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
@@ -111,7 +117,9 @@ def data_measure_get_intradayactivity(
     for data_field in data_fields:
         if data_field not in CONST.MEASURE_GET_ACTIVITY_DATA_FIELDS:
             warnings.warn(
-                exceptions_warnings.InvalidDataFieldWarning(data_measure_get_intradayactivity.__name__, data_field)
+                exceptions_warnings.InvalidDataFieldWarning(
+                    data_measure_get_intradayactivity.__name__, data_field
+                )
             )
             data_fields.remove(data_field)
 
@@ -152,10 +160,12 @@ def data_measure_get_meas(
             Defaults to None.
         offset (int, optional): The number of measurements to skip in the response.
             Defaults to 0.
-        category (int, optional): Category of the measures, either 1 (real measures) or 2 (user objectives).
+        category (int, optional): Category of the measures,
+            either 1 (real measures) or 2 (user objectives).
             Defaults to 1.
-        data_fields (int | str | list[int | str], optional): The fields to retrieve, as integers, strings, or a list
-            of integers and strings. Defaults to CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT.
+        data_fields (int | str | list[int | str], optional): The fields to retrieve,
+            as integers, strings, or a list of integers and strings.
+            Defaults to CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT.
 
     Returns:
         dict: A dictionary with the necessary parameters to send to the Withings API.
@@ -179,9 +189,13 @@ def data_measure_get_meas(
         elif isinstance(data_field, str) and data_field in CONST.MEASURE_GET_MEAS_DATA_FIELDS_STR:
             meastypes_list.append(CONST.MEASURE_GET_MEAS_DATA_FIELDS_STR_TO_INT[data_field])
         else:
-            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_measure_get_meas.__name__, data_field))
+            warnings.warn(
+                exceptions_warnings.InvalidDataFieldWarning(
+                    data_measure_get_meas.__name__, data_field
+                )
+            )
 
-    if len(meastypes_list) == 0:  # if no valid data field remains after removing invalid data fields
+    if len(meastypes_list) == 0:  # if no data field remains after removing invalid data fields
         meastype = None
         meastypes = ",".join(map(str, CONST.MEASURE_GET_MEAS_DATA_FIELDS_INT))
     elif len(meastypes_list) == 1:
@@ -192,7 +206,9 @@ def data_measure_get_meas(
         meastypes = ",".join(map(str, meastypes_list))
 
     if category not in (1, 2):
-        raise ValueError("The parameter 'category' must be 1 for real measures or 2 for user objectives.")
+        raise ValueError(
+            "The parameter 'category' must be 1 for real measures or 2 for user objectives."
+        )
 
     return {
         "action": "getmeas",
@@ -219,7 +235,11 @@ def data_measure_get_workouts(
 
     for data_field in data_fields:
         if data_field not in CONST.MEASURE_GET_WORKOUTS_DATA_FIELDS:
-            warnings.warn(exceptions_warnings.InvalidDataFieldWarning(data_measure_get_workouts.__name__, data_field))
+            warnings.warn(
+                exceptions_warnings.InvalidDataFieldWarning(
+                    data_measure_get_workouts.__name__, data_field
+                )
+            )
             data_fields.remove(data_field)
 
     if len(data_fields) == 0:  # if no valid data field remains after removing invalid data fields
@@ -244,8 +264,10 @@ def post_request_measure(data: dict, user: WithingsUser, to_json: bool = False) 
 
     Args:
         data (dict, required): A dictionary containing the request data.
-        user (WithingsUser, required): An instance of `WithingsUser` containing the user credentials and headers.
-        to_json (bool, optional): If set to True, the response is saved as a JSON file in the user's folder.
+        user (WithingsUser, required): An instance of `WithingsUser` containing
+            the user credentials and headers.
+        to_json (bool, optional): If set to True, the response is saved as a JSON file
+            in the user's folder.
             Defaults to False.
 
     Returns:

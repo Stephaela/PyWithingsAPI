@@ -3,8 +3,9 @@ heart.py module
 
 This module provides functions to interact with the Withings API for heart data.
 
-It includes functions to retrieve a heart signal (`data_heart_get`), list heart signals
-within a date range (`data_heart_list`), and make POST requests to fetch heart data (`post_request_heart`).
+It includes functions to retrieve a heart signal (`data_heart_get`),
+list heart signals within a date range (`data_heart_list`),
+and make POST requests to fetch heart data (`post_request_heart`).
 """
 
 from pywithingsapi import CONSTANTS as CONST
@@ -38,17 +39,19 @@ def data_heart_list(startdate: int = None, enddate: int = None, offset: int = 0)
     If there is more data available than the chunk limit, the newest data will be returned first.
 
     Args:
-        startdate (int, optional): The start datetime for the heart signal listing (in Unix timestamp format).
-            Defaults to None.
-        enddate (int, optional): The end datetime for the heart signal listing (in Unix timestamp format).
-            Defaults to None.
+        startdate (int, optional): The start datetime for the heart signal listing
+            (in Unix timestamp format). Defaults to None.
+        enddate (int, optional): The end datetime for the heart signal listing
+            (in Unix timestamp format). Defaults to None.
         offset (int, optional): The offset for paginated results. Defaults to 0.
 
     Returns:
-        dict: A dictionary containing the action, start date, end date, and offset for the API request.
+        dict: A dictionary containing the action, start date, end date,
+            and offset for the API request.
 
     Raises:
-        ValueError: If there is at least one parameter which is not either None or a non-negative integer.
+        ValueError: If there is at least one parameter which is not either None
+            or a non-negative integer.
     """
     utils.ensure_non_negative_int_or_none(startdate, enddate, offset)
     utils.warn_if_end_before_start(startdate, enddate)
@@ -64,10 +67,12 @@ def post_request_heart(data: dict, user: WithingsUser, to_json: bool = False) ->
     If `to_json` is set to True, the response is saved as a JSON file.
 
     Args:
-        data (dict, required): A dictionary containing the request data ( from `data_heart_get` or `data_heart_list`).
-        user (WithingsUser, required): An instance of `WithingsUser` containing the user credentials and headers.
-        to_json (bool, optional): If set to True, the response is saved as a JSON file in the user's folder.
-            Defaults to False.
+        data (dict, required): A dictionary containing the request data
+            (from `data_heart_get` or `data_heart_list`).
+        user (WithingsUser, required): An instance of `WithingsUser` containing
+            the user credentials and headers.
+        to_json (bool, optional): If set to True, the response is saved as a
+            JSON file in the user's folder. Defaults to False.
 
     Returns:
         dict: The response from the API parsed as a dictionary.

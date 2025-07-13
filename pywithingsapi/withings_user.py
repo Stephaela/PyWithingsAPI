@@ -43,7 +43,8 @@ class WithingsUser:
 
         Args:
             api_client: An instance of the API client to manage token requests.
-            data (dict, optional): A dictionary containing user information such as access tokens and user ID.
+            data (dict, optional): A dictionary containing user information
+                such as access tokens and user ID.
                 If no data is provided, the function will request a new token from the API.
 
         Raises:
@@ -85,8 +86,10 @@ class WithingsUser:
         Creates a `WithingsUser` instance from a dictionary.
 
         Args:
-            api (withings_client.WithingsClient): An instance of the API client to manage token requests.
-            data (dict): A dictionary containing user-specific information like access tokens, user ID, and scope.
+            api (withings_client.WithingsClient): An instance of the API client
+                to manage token requests.
+            data (dict): A dictionary containing user-specific information
+                like access tokens, user ID, and scope.
 
         Returns:
             WithingsUser: A new instance of `WithingsUser`.
@@ -97,8 +100,10 @@ class WithingsUser:
         """
         if not isinstance(data, dict):
             raise TypeError("Input must be a dictionary.")
-        if not all(key in data for key in ["userid", "access_token", "refresh_token", "scope", "token_type",
-                                           "expiration_time"]):
+        if not all(key in data for key in
+                   ["userid", "access_token", "refresh_token",
+                    "scope", "token_type", "expiration_time"]
+                   ):
             raise KeyError("At least one key is missing in the dictionary.")
         return cls(api, data)
 
@@ -121,7 +126,8 @@ class WithingsUser:
                 os.makedirs(os.path.join(CONST.DATA_DIR, user_folder))
             return user_folder
         except OSError as e:
-            print(f"An error occurred while accessing or creating the directory ({e}, {type(e).__name__}).")
+            print(f"An error occurred while accessing or creating the directory "
+                  f"({e}, {type(e).__name__}).")
 
     def store_user_params(self):
         """
@@ -136,13 +142,14 @@ class WithingsUser:
 
         user_data = {
             key: getattr(self, key)
-            for key in ["userid", "access_token", "refresh_token", "scope", "token_type", "expiration_time"]
+            for key in ["userid", "access_token", "refresh_token",
+                        "scope", "token_type", "expiration_time"]
         }
 
         user_data["demo"] = self.api_client.demo
 
         try:
-            with open(user_params_file_path, 'w') as file:
+            with open(user_params_file_path, 'w', encoding='utf-8') as file:
                 json.dump(user_data, file, indent=4)
         except OSError as e:
             print(f"An error occurred while writing the file ({e}, {type(e).__name__}).")
@@ -167,12 +174,13 @@ class WithingsUser:
         Sends a POST request to obtain a new access token by using the refresh token.
 
         This function sends a POST request to the OAuth2 endpoint to exchange the refresh
-        token for a fresh access token. The necessary client credentials and refresh token are included
-        in the request body.
+        token for a fresh access token. The necessary client credentials and
+        refresh token are included in the request body.
 
         Returns:
-            requests.Response: The response object from the POST request, which contains the fresh access
-             and refresh tokens if the request is successful.
+            requests.Response: The response object from the POST request,
+                which contains the fresh access
+                and refresh tokens if the request is successful.
         """
         url = CONST.URL_OAUTH2_V2
         data = {

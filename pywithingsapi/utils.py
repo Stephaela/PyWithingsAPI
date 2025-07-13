@@ -19,7 +19,7 @@ def ensure_non_negative_int_or_none(*parameters: int | None):
     a ValueError is raised.
 
     Args:
-        *parameters (int | None): A variable number of arguments where each argument must
+        parameters (int | None): A variable number of arguments where each argument must
             be either a non-negative integer or None.
 
     Raises:
@@ -54,9 +54,12 @@ def handle_start_end_update_ymd(startdate: int = None,
 
     Returns:
         tuple: A tuple containing:
-            - startdateymd (dt.date or None): The start date in YMD format, or None if lastupdate is provided.
-            - enddateymd (dt.date or None): The end date in YMD format, or None if lastupdate is provided.
-            - lastupdate (int or None): The last update timestamp, or None if start and end dates are provided.
+            - startdateymd (dt.date or None): The start date in YMD format,
+              or None if lastupdate is provided.
+            - enddateymd (dt.date or None): The end date in YMD format,
+              or None if lastupdate is provided.
+            - lastupdate (int or None): The last update timestamp,
+              or None if start and end dates are provided.
 
     Raises:
         ValueError: If neither `startdate`/`enddate` nor `lastupdate` are provided,
@@ -66,7 +69,7 @@ def handle_start_end_update_ymd(startdate: int = None,
     if (startdate is None or enddate is None) and lastupdate is None:
         # Neither both startdate and enddate, nor lastupdate were provided
         raise ValueError("At least one required parameter is missing")
-    elif (startdate is not None or enddate is not None) and lastupdate is not None:
+    if (startdate is not None or enddate is not None) and lastupdate is not None:
         # All three parameters were provided
         raise ValueError("The provided parameters are incompatible")
 

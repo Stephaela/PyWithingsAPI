@@ -7,10 +7,20 @@ from the Withings API.
 ## Prerequisites and installation
 
 This code was written in Python 3.12.5. To use this library, please clone 
-the repository and install the libraries `requests` and `pandas`.
+the repository 
+
+```bash
+git clone https://github.com/Stephaela/PyWithingsAPI.git
+```
+
+and install the required libraries
+
+```bash
+pip install -r requirements.txt
+```
 
 Please note that using this library is not possible without creating a 
-Withings developer account and an application first.
+Withings developer account and an application first (see below).
 
 ## The Withings API
 
